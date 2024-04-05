@@ -3,6 +3,7 @@ package org.insa.graphs.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 /**
  * <p>
@@ -18,6 +19,32 @@ import java.util.List;
  */
 public class Path {
 
+    public static Path createBestPathFromNodes(Graph graph, List<Node> nodes, BiPredicate<Arc,Arc> compare)
+            throws IllegalArgumentException {
+        List<Arc> arcs = new ArrayList<Arc>();
+        for(int i=0;i<nodes.size()-1;i++){
+            Node currentNode = nodes.get(i);
+            Node nextNode = nodes.get(i+1);
+            Arc bestArc = null;
+            
+            for(Arc arc: currentNode.getSuccessors()){
+                if(arc.getDestination()==nextNode){
+                    if(bestArc==null){
+                        bestArc = arc;
+                    }
+                    else if(compare.test(arc,bestArc)){//bestArc.getLength()>arc.getLength()
+                        bestArc = arc;
+                    }
+                }
+            }
+            if(bestArc==null){
+                throw new IllegalArgumentException("Erreur : Il existe deux sommets non adjacents qui se suivent dans la liste des noeuds");
+            }
+            arcs.add(bestArc);
+        }
+        return new Path(graph, arcs);
+    }
+
     /**
      * Create a new path that goes through the given list of nodes (in order),
      * choosing the fastest route if multiple are available.
@@ -29,14 +56,12 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
+
+        BiPredicate<Arc,Arc> compare = (Arc arc1,Arc arc2) -> {return arc2.getMinimumTravelTime()>arc1.getMinimumTravelTime();};
+        return Path.createBestPathFromNodes(graph, nodes, compare);
     }
 
     /**
@@ -50,14 +75,11 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
+        BiPredicate<Arc,Arc> compare = (Arc arc1,Arc arc2) -> {return arc2.getLength()>arc1.getLength();};
+        return Path.createBestPathFromNodes(graph, nodes, compare);
     }
 
     /**
@@ -197,8 +219,6 @@ public class Path {
      * </ul>
      * 
      * @return true if the path is valid, false otherwise.
-     * 
-     * @deprecated Need to be implemented.
      */
     public boolean isValid() {
         
@@ -219,12 +239,17 @@ public class Path {
      * Compute the length of this path (in meters).
      * 
      * @return Total length of the path (in meters).
-     * 
-     * @deprecated Need to be implemented.
      */
     public float getLength() {
-        // TODO:
-        return 0;
+        float result = 0;
+        for(Arc arc: this.arcs){
+            result += arc.getLength();
+        }        
+        return result;
+    }
+
+    public static double getTravelTime(float length,double speed){
+        return length/((speed*1000)/3600);
     }
 
     /**
@@ -234,12 +259,9 @@ public class Path {
      * 
      * @return Time (in seconds) required to travel this path at the given speed (in
      *         kilometers-per-hour).
-     * 
-     * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        // TODO:
-        return 0;
+        return Path.getTravelTime(this.getLength(), speed);
     }
 
     /**
@@ -247,12 +269,13 @@ public class Path {
      * on every arc.
      * 
      * @return Minimum travel time to travel this path (in seconds).
-     * 
-     * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
-        // TODO:
-        return 0;
+        double result = 0;
+        for(Arc arc: this.arcs){
+            result += Path.getTravelTime(arc.getLength(), arc.getRoadInformation().getMaximumSpeed());
+        }        
+        return result;
     }
 
 }
