@@ -201,8 +201,18 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        // TODO:
-        return false;
+        
+        if (!(this.isEmpty() || (this.arcs.size()==0 && this.origin!=null) )){
+            Arc previousArc=null;
+            for (Arc arc: this.arcs){
+                if (previousArc!=null) {
+                    if (previousArc.getDestination()!=arc.getOrigin()) return false;
+                    
+                }
+                previousArc = arc;
+            }
+        };
+        return true;
     }
 
     /**
