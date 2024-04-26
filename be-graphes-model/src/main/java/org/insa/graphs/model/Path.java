@@ -42,7 +42,10 @@ public class Path {
             }
             arcs.add(bestArc);
         }
-        return new Path(graph, arcs);
+
+
+
+        return (arcs.size()>0 ? new Path(graph, arcs) : new Path(graph, (nodes.size()>0 ? nodes.get(0) : null) ));
     }
 
     /**
