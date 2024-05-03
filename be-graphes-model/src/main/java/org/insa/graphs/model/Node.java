@@ -26,12 +26,7 @@ public final class Node { //implements Comparable<Node> {
      * Link the two given nodes with one or two arcs (depending on roadInformation),
      * with the given attributes.
      * </p>
-     * 
-     * <p>
-     * If {@code roadInformation.isOneWay()} is {@code true}, only a forward arc is
-     * created (origin to destination) and added to origin. Otherwise, a
-     * corresponding backward arc is created and add to destination.
-     * </p>
+     * coût réalisé : valeur courante du plus court chemin depuis l'origine vers le sommet. Pour éviter toute confusion plus tard, ne l'appelez pas simplement coût. 
      * 
      * @param origin Origin of the arc.
      * @param destination Destination of the arc.

@@ -271,7 +271,19 @@ public class Path {
      * Compute the time to travel this path if moving at the maximum allowed speed
      * on every arc.
      * 
-     * @return Minimum travel time to travel this path (in seconds).
+     * @return Mpublic Node current;
+    public boolean visited;
+    private int realizedCost;
+    public Node father;
+
+    public Label(Node sommet){
+        this.current = sommet;
+        this.visited = false;
+    }
+
+    public int getCost(){
+        return realizedCost;
+    }inimum travel time to travel this path (in seconds).
      */
     public double getMinimumTravelTime() {
         double result = 0;
