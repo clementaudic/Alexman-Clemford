@@ -6,8 +6,8 @@ import org.insa.graphs.model.Node;
 public class Label implements Comparable<Label>{
     public Node current;
     public boolean visited;
-    private float realizedCost;
-    public Node father;
+    private double realizedCost;
+    public Arc father;
 
     public Label(Node node){
         this.current = node;
@@ -16,23 +16,23 @@ public class Label implements Comparable<Label>{
         this.visited = false;
     }
 
-    public Label(Arc arc){
+    public Label(Arc arc,double cost){
         this.current = arc.getDestination();
-        this.father = arc.getOrigin();
-        this.realizedCost = arc.getLength();
+        this.father = arc;
+        this.realizedCost = cost;
         this.visited = false;
     }
 
-    public float getCost(){
+    public double getCost(){
         return realizedCost;
     }
 
-    public void setRealizedCost(float cost){
+    public void setRealizedCost(double cost){
         this.realizedCost = cost;
     }
 
     public int compareTo(Label label){
-        float a = this.realizedCost-label.realizedCost;
+        double a = this.realizedCost-label.realizedCost;
         return (a>0 ? 1 : (a<0) ? -1 : 0);
     }
 }
