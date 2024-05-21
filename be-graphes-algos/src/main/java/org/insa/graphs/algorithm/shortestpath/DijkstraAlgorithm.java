@@ -19,6 +19,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         super(data);
     }
 
+    public Label createLabel(Node node){
+        return new Label(node);
+    }
+
+    public Label createLabel(Arc arc, double cost){
+        return new Label(arc, cost);
+    }
+
+
+
     @Override
     protected ShortestPathSolution doRun() {
 
@@ -32,21 +42,24 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         BinaryHeap<Label> heap = new BinaryHeap<Label>();
         Node dest = data.getDestination();
         int idFather = data.getOrigin().getId();
-        tab[idFather] = new Label(data.getOrigin());
+        tab[idFather] = this.createLabel(data.getOrigin());
         heap.insert(tab[idFather]);
+        notifyOriginProcessed(tab[idFather].current);
         while(!(heap.isEmpty() || idFather == dest.getId())){
             idFather = heap.deleteMin().current.getId();
+            notifyNodeMarked(tab[idFather].current);
             arcLoop: for(Arc arc:tab[idFather].current.getSuccessors()){
                 if (!data.isAllowed(arc)) continue arcLoop;
                 int id = arc.getDestination().getId();
                 if(tab[id]==null){
-                    tab[id] = new Label(arc,this.data.getCost(arc) + tab[idFather].getCost());
+                    tab[id] = this.createLabel(arc,this.data.getCost(arc) + tab[idFather].getCost());
                     heap.insert(tab[id]);
+                    notifyNodeReached(tab[id].current);
                 }
                 else{
                     double bestCostSoFar = tab[id].getCost();
                     double costFromNewFather = tab[idFather].getCost() + data.getCost(arc);
-                    //on pourrait aussi vérifier que le sommet est marqué ou non (pour que dijkstra puisse tourner sans erreur dans le cas de circuit de longueur négative)
+                    //on pourrait aussi vérifier que le sommet est marqué ou non (pour que Dijkstra puisse tourner sans erreur dans le cas de circuit de longueur négative)
                     if(bestCostSoFar>costFromNewFather){
                         heap.remove(tab[id]);
                         tab[id].father = arc; 
@@ -55,7 +68,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                     }
                 }
             }
-    
+        }
+        if(idFather == dest.getId()){
+            notifyDestinationReached(tab[idFather].current);
         }
 
 

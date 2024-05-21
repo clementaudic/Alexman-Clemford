@@ -6,7 +6,7 @@ import org.insa.graphs.model.Node;
 public class Label implements Comparable<Label>{
     public Node current;
     public boolean visited;
-    private double realizedCost;
+    protected double realizedCost;
     public Arc father;
 
     public Label(Node node){
