@@ -20,6 +20,12 @@
 			<artifactId>be-graphes-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	</dependencies>
+	
+   <dependency>
+     <groupId>de.tum.ei.lkn.eces</groupId>
+     <artifactId>routing</artifactId>
+     <version>2.0.4</version>
+   </dependency>
+ </dependencies>
 	
 </project>

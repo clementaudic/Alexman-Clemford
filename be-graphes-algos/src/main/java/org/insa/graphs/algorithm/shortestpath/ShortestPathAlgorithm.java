@@ -1,9 +1,12 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 import org.insa.graphs.algorithm.AbstractAlgorithm;
+import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.model.Node;
 
 public abstract class ShortestPathAlgorithm extends AbstractAlgorithm<ShortestPathObserver> {
+
+    public Status status;
 
     protected ShortestPathAlgorithm(ShortestPathData data) {
         super(data);

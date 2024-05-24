@@ -164,7 +164,7 @@ public class Path {
     }
 
     /**
-     * @return Graph containing the path.
+     * @return Graph containing the pa    // Create random pathth.
      */
     public Graph getGraph() {
         return graph;

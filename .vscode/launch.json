@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "LaunchTest",
+            "request": "launch",
+            "mainClass": "org.insa.graphs.algorithm.utils.LaunchTest",
+            "projectName": "be-graphes-algos"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
