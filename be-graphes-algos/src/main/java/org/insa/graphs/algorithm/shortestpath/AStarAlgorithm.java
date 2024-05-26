@@ -16,7 +16,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 
     @Override
     public Label createLabel(Arc arc, double cost){
-        return new LabelStar(arc, cost, getInputData().getDestination().getPoint());
+        return new LabelStar(arc, cost, getInputData().getDestination().getPoint(),this.data);
     }
 
 }

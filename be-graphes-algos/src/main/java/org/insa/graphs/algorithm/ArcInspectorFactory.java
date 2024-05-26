@@ -143,6 +143,35 @@ public class ArcInspectorFactory {
         }
     } ;
 
+    // Only road allowed for public transport:
+    static ArcInspector forPublicTransportT = new ArcInspector() {
+
+        static final int maxPublicTransportSpeed = 80 ;
+
+        @Override
+        public boolean isAllowed(Arc arc) {
+            return arc.getRoadInformation().getAccessRestrictions()
+                    .isAllowedForAny(AccessMode.PUBLIC_TRANSPORT,EnumSet.complementOf(EnumSet
+                    .of(AccessRestriction.FORBIDDEN, AccessRestriction.PRIVATE)));
+        }
+
+        @Override
+        public double getCost(Arc arc) {
+            return arc.getTravelTime(
+                Math.min(maxPublicTransportSpeed, arc.getRoadInformation().getMaximumSpeed()));
+        }
+
+        @Override
+        public Mode getMode() {
+            return Mode.TIME ;
+        }
+
+        @Override
+        public String toString() {
+            return "Fastest path for public transport, no private or forbidden roads";
+        }
+    } ;
+
     /**
      * @return List of all arc filters in this factory.
      */
@@ -156,6 +185,7 @@ public class ArcInspectorFactory {
         filters.add(forCarsL) ;
         filters.add(forCarsT) ;
         filters.add(forBicyclesT);
+        filters.add(forPublicTransportT);
 
         // Add your own filters here (do not forget to implement toString()
         // to get an understandable output!):

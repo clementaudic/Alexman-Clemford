@@ -2,28 +2,19 @@ package org.insa.graphs.algorithm.utils;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.beans.Transient;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.model.io.BinaryGraphReader;
-import org.insa.graphs.model.io.BinaryPathReader;
 import org.insa.graphs.model.io.GraphReader;
-import org.insa.graphs.model.io.PathReader;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.insa.graphs.algorithm.ArcInspector;
+
 import org.insa.graphs.algorithm.ArcInspectorFactory;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
@@ -36,29 +27,38 @@ import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
 
 public class LaunchTest {
 
-    public Path[] dijsktraPathTab;
+    public int numberOfTests;
+
     public Path[] benchmarkPathTab;
+    public Path[] dijsktraPathTab;
     public Path[] aStarPathTab;
 
+    public int numberOfTestsBis;
+
+    public Status[] benchmarkUnfeasibleTab;
+    public Status[] dijsktraUnfeasibleTab;
+    public Status[] aStarUnfeasibleTab;
 
     @Before
     public void initAll() throws IOException {
 
-        dijsktraPathTab = new Path[150];
-        benchmarkPathTab = new Path[150];
-        aStarPathTab = new Path[150];
+        numberOfTests = 10;
+        dijsktraPathTab = new Path[numberOfTests];
+        benchmarkPathTab = new Path[numberOfTests];
+        aStarPathTab = new Path[numberOfTests];
 
-        String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr";
         
         GraphReader reader = new BinaryGraphReader(new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
         Graph graph = reader.read();
         
         int i = 0;
-        while(i<150){
+        while(i<benchmarkPathTab.length){
             int origin = (int)(Math.random() * graph.size());
             int destination = (int)(Math.random() * graph.size());
-            ShortestPathData data = new ShortestPathData(graph,graph.getNodes().get(origin),graph.getNodes().get(destination), ArcInspectorFactory.getAllFilters().get(0));
+
+            ShortestPathData data = new ShortestPathData(graph,graph.getNodes().get(origin),graph.getNodes().get(destination), ArcInspectorFactory.getAllFilters().get(i%5));
             ShortestPathSolution benchmarkResult = new BellmanFordAlgorithm(data).doRun();
 
             if(benchmarkResult.getStatus()!=Status.INFEASIBLE && benchmarkResult.getStatus()!=Status.UNKNOWN){
@@ -69,6 +69,24 @@ public class LaunchTest {
             }
 
         }   
+
+        numberOfTestsBis = 5;
+        benchmarkUnfeasibleTab = new Status[numberOfTestsBis];
+        dijsktraUnfeasibleTab = new Status[numberOfTestsBis];
+        aStarUnfeasibleTab = new Status[numberOfTestsBis];
+        
+        String mapNameBis = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/guadeloupe.mapgr";
+        
+        GraphReader readerBis = new BinaryGraphReader(new DataInputStream(new BufferedInputStream(new FileInputStream(mapNameBis))));
+
+        Graph graphBis = readerBis.read();
+
+        for(int j=0;j<numberOfTestsBis;j++){
+            ShortestPathData data = new ShortestPathData(graphBis,graphBis.getNodes().get(34593),graphBis.getNodes().get(93), ArcInspectorFactory.getAllFilters().get(i%5));
+            benchmarkUnfeasibleTab[j] = new BellmanFordAlgorithm(data).doRun().getStatus();
+            dijsktraUnfeasibleTab[j] = new DijkstraAlgorithm(data).doRun().getStatus();
+            aStarUnfeasibleTab[j] = new AStarAlgorithm(data).doRun().getStatus();
+        }
     }
 
     @Test
@@ -98,4 +116,19 @@ public class LaunchTest {
             assertEquals(benchmarkPathTab[i].getLength(),aStarPathTab[i].getLength(),0.1);
         }
     }
+
+    @Test
+    public void testUnfeasibleDijsktra(){
+        for(int i=0;i<dijsktraUnfeasibleTab.length;i++){
+            assertEquals(Status.INFEASIBLE,dijsktraUnfeasibleTab[i]);
+        }
+    }
+
+    @Test
+    public void testUnfeasibleAStar(){
+        for(int i=0;i<aStarUnfeasibleTab.length;i++){
+            assertEquals(Status.INFEASIBLE,aStarUnfeasibleTab[i]);
+        }
+    }
+  
 }

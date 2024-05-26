@@ -53,15 +53,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 int id = arc.getDestination().getId();
                 if(tab[id]==null){
                     tab[id] = this.createLabel(arc,this.data.getCost(arc) + tab[idFather].getCost());
-                    heap.insert(tab[id]);
+                    heap.insert(tab[id]); // le problème vient probablement du tab[id] == null, mais pk ?
                     notifyNodeReached(tab[id].current);
                 }
                 else{
                     double bestCostSoFar = tab[id].getCost();
-                    double costFromNewFather = tab[idFather].getCost() + data.getCost(arc);
+                    double costFromNewFather = tab[idFather].getCost() + this.data.getCost(arc);
                     //on pourrait aussi vérifier que le sommet est marqué ou non (pour que Dijkstra puisse tourner sans erreur dans le cas de circuit de longueur négative)
                     if(bestCostSoFar>costFromNewFather){
-                        heap.remove(tab[id]);
+                        heap.remove(tab[id]); // on remove un tab[id] qui n'a pas été ajouté
                         tab[id].father = arc; 
                         tab[id].setRealizedCost(costFromNewFather);
                         heap.insert(tab[id]);

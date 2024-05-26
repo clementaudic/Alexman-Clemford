@@ -1,4 +1,6 @@
 package org.insa.graphs.algorithm.shortestpath;
+import org.insa.graphs.algorithm.AbstractInputData;
+import org.insa.graphs.algorithm.AbstractInputData.Mode;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Point;
@@ -13,9 +15,10 @@ public class LabelStar extends Label{
         this.totalCost = 0;
     }
     
-    public LabelStar(Arc arc,double cost,Point destinationPoint){
+    public LabelStar(Arc arc,double cost,Point destinationPoint,AbstractInputData data){
         super(arc,cost);
         this.distanceToDest = Point.distance(arc.getDestination().getPoint(),destinationPoint);
+        if(data.getMode() == Mode.TIME) this.distanceToDest /= data.getGraph().getGraphInformation().getMaximumSpeed();
         this.totalCost = cost + this.distanceToDest;
     }
 
