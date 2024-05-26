@@ -1,6 +1,7 @@
 package org.insa.graphs.algorithm.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -104,6 +105,20 @@ public class LaunchTest {
     }
 
     @Test
+    public void testIsValidPathDijsktra(){
+        for(int i=0;i<dijsktraPathTab.length;i++){
+            assertTrue(dijsktraPathTab[i].isValid());
+        }
+    }
+
+    @Test
+    public void testUnfeasibleDijsktra(){
+        for(int i=0;i<dijsktraUnfeasibleTab.length;i++){
+            assertEquals(Status.INFEASIBLE,dijsktraUnfeasibleTab[i]);
+        }
+    }
+
+    @Test
     public void testTravelTimePathAStar(){
         for(int i=0;i<aStarPathTab.length;i++){
             assertEquals(benchmarkPathTab[i].getMinimumTravelTime(),aStarPathTab[i].getMinimumTravelTime(),0.1);
@@ -118,9 +133,9 @@ public class LaunchTest {
     }
 
     @Test
-    public void testUnfeasibleDijsktra(){
-        for(int i=0;i<dijsktraUnfeasibleTab.length;i++){
-            assertEquals(Status.INFEASIBLE,dijsktraUnfeasibleTab[i]);
+    public void testIsValidPathAStar(){
+        for(int i=0;i<aStarPathTab.length;i++){
+            assertTrue(aStarPathTab[i].isValid());
         }
     }
 
