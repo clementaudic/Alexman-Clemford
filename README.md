@@ -1,4 +1,4 @@
-# Shortest path finder
+# Open Street Maps shortest path finder
 
 Let's take the city of Paris as an example, representated by 48,432 nodes and 101,989 edges.
 
@@ -21,4 +21,5 @@ Let's take the city of Paris as an example, representated by 48,432 nodes and 10
     
 ## Others maps
 
-http://lambda.insa-toulouse.fr/Y/be-graphes.html
+http://lambda.insa-toulouse.fr/Y/be-graphes.html <br>
+(based on Open Streets Maps)
